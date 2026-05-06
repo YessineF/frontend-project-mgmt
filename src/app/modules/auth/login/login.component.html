@@ -1,0 +1,131 @@
+<div class="login-page">
+
+  <!-- ══ LEFT PANEL (branding) ══════════════════════════ -->
+  <div class="login-left d-none d-lg-flex">
+    <div class="login-left-content">
+      <div class="login-logo">
+        <i class="bi bi-diagram-3-fill"></i>
+      </div>
+      <h1 class="login-headline">
+        Gérez vos projets<br>avec précision.
+      </h1>
+      <p class="login-desc">
+        Plateforme de gestion de projets centralisée pour vos équipes.
+        Suivez, affectez et optimisez chaque projet en temps réel.
+      </p>
+
+      <!-- Feature pills -->
+      <div class="feature-list">
+        <div class="feature-item">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Tableaux de bord en temps réel</span>
+        </div>
+        <div class="feature-item">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Gestion des affectations d'équipe</span>
+        </div>
+        <div class="feature-item">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Statistiques et rapports avancés</span>
+        </div>
+        <div class="feature-item">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>Sécurité JWT & contrôle d'accès</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decorative circles -->
+    <div class="deco-circle deco-1"></div>
+    <div class="deco-circle deco-2"></div>
+  </div>
+
+  <!-- ══ RIGHT PANEL (form) ══════════════════════════════ -->
+  <div class="login-right">
+    <div class="login-form-wrap">
+
+      <!-- Mobile logo -->
+      <div class="mobile-brand d-lg-none">
+        <div class="mobile-brand-icon">
+          <i class="bi bi-diagram-3-fill"></i>
+        </div>
+        <span>GestionProjets</span>
+      </div>
+
+      <div class="login-form-header">
+        <h2>Connexion</h2>
+        <p>Accédez à votre espace de travail</p>
+      </div>
+
+      <!-- Error -->
+      @if (errorMsg) {
+        <div class="login-error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ errorMsg }}</span>
+        </div>
+      }
+
+      <!-- Form -->
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="login-form">
+
+        <div class="field-group">
+          <label class="field-label">Adresse email</label>
+          <div class="field-input-wrap">
+            <i class="bi bi-envelope field-icon"></i>
+            <input
+              type="email"
+              formControlName="email"
+              class="field-input"
+              [class.field-error]="emailCtrl?.invalid && emailCtrl?.touched"
+              placeholder="vous@entreprise.com"
+              autocomplete="email">
+          </div>
+          @if (emailCtrl?.invalid && emailCtrl?.touched) {
+            <span class="field-msg">
+              @if (emailCtrl?.errors?.['required']) { L'email est requis }
+              @if (emailCtrl?.errors?.['email'])    { Format d'email invalide }
+            </span>
+          }
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Mot de passe</label>
+          <div class="field-input-wrap">
+            <i class="bi bi-lock field-icon"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              class="field-input"
+              [class.field-error]="pwdCtrl?.invalid && pwdCtrl?.touched"
+              placeholder="••••••••"
+              autocomplete="current-password">
+            <button type="button" class="field-toggle" (click)="showPassword = !showPassword" tabindex="-1">
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+            </button>
+          </div>
+          @if (pwdCtrl?.invalid && pwdCtrl?.touched) {
+            <span class="field-msg">Le mot de passe est requis</span>
+          }
+        </div>
+
+        <button type="submit" class="login-btn" [class.loading]="loading" [disabled]="loading">
+          @if (loading) {
+            <span class="btn-spinner"></span>
+            Connexion en cours…
+          } @else {
+            <i class="bi bi-arrow-right-circle-fill"></i>
+            Se connecter
+          }
+        </button>
+
+      </form>
+
+      <div class="login-footer">
+        <i class="bi bi-shield-lock-fill"></i>
+        Accès sécurisé · Authentification JWT
+      </div>
+
+    </div>
+  </div>
+
+</div>

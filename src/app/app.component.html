@@ -1,0 +1,44 @@
+<!-- ── Without auth: just the route (login page) ── -->
+@if (!authService.isLoggedIn()) {
+  <router-outlet></router-outlet>
+}
+
+<!-- ── Authenticated shell ── -->
+@if (authService.isLoggedIn()) {
+  <div class="app-shell">
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="app-sidebar" [class.open]="sidebarOpen">
+      <app-header (closeSidebar)="sidebarOpen = false"></app-header>
+    </aside>
+
+    <!-- ═══ MAIN AREA ═══ -->
+    <div class="app-main">
+
+      <!-- Top bar -->
+      <header class="app-topbar">
+        <!-- Hamburger (mobile) -->
+        <button class="topbar-btn d-lg-none" (click)="sidebarOpen = !sidebarOpen">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+
+        <span class="topbar-title">{{ pageTitle }}</span>
+
+        <div class="topbar-actions">
+          <div class="topbar-btn">
+            <i class="bi bi-bell"></i>
+          </div>
+          <div class="topbar-btn">
+            <i class="bi bi-gear"></i>
+          </div>
+        </div>
+      </header>
+
+      <!-- Page content -->
+      <main class="page-content">
+        <router-outlet></router-outlet>
+      </main>
+
+    </div>
+  </div>
+}

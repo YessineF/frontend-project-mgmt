@@ -1,0 +1,105 @@
+<div class="sidebar-brand">
+  <div class="brand-icon">
+    <i class="bi bi-diagram-3-fill"></i>
+  </div>
+  <div class="brand-text">
+    <div class="brand-name">GestionProjets</div>
+    <div class="brand-sub">Pro Platform</div>
+  </div>
+</div>
+
+<nav class="sidebar-nav">
+
+  @if (isAdmin) {
+    <div class="nav-section-label">Principal</div>
+
+    <a class="nav-link"
+       routerLink="/admin/dashboard"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-grid-1x2-fill"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a class="nav-link"
+       routerLink="/admin/projets"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-kanban-fill"></i>
+      <span>Projets</span>
+    </a>
+
+    <div class="nav-section-label">Administration</div>
+
+    <a class="nav-link"
+       routerLink="/admin/employes"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-people-fill"></i>
+      <span>Employés</span>
+    </a>
+
+    <a class="nav-link"
+       routerLink="/admin/affectations"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-person-check-fill"></i>
+      <span>Affectations</span>
+    </a>
+
+    <a class="nav-link"
+       routerLink="/admin/categories"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-tags-fill"></i>
+      <span>Catégories</span>
+    </a>
+  }
+
+  @if (!isAdmin) {
+    <div class="nav-section-label">Mon espace</div>
+
+    <a class="nav-link"
+       routerLink="/employe/dashboard"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-grid-1x2-fill"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a class="nav-link"
+       routerLink="/employe/projets"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-kanban-fill"></i>
+      <span>Mes Projets</span>
+    </a>
+
+    <a class="nav-link"
+       routerLink="/employe/profil"
+       routerLinkActive="active"
+       (click)="closeSidebar.emit()">
+      <i class="bi bi-person-fill"></i>
+      <span>Mon Profil</span>
+    </a>
+  }
+</nav>
+
+<div class="sidebar-footer">
+
+  <div class="sidebar-user-info">
+    <div class="user-avatar">
+      {{ (user?.prenom?.[0] ?? '') + (user?.nom?.[0] ?? '') }}
+    </div>
+    <div class="user-info">
+      <div class="user-name">{{ user?.prenom }} {{ user?.nom }}</div>
+      <div class="user-role">{{ user?.role }}</div>
+    </div>
+  </div>
+
+  <button class="logout-btn" (click)="logout()" title="Se déconnecter">
+    <i class="bi bi-box-arrow-right"></i>
+    <span>Déconnexion</span>
+  </button>
+
+</div>

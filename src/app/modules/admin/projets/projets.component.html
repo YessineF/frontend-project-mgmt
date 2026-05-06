@@ -1,0 +1,129 @@
+<div class="container-fluid py-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-folder-fill fs-4 text-success"></i>
+      <h3 class="mb-0 fw-bold">Gestion des Projets</h3>
+    </div>
+    <button class="btn btn-success gap-2 d-flex align-items-center" (click)="openCreateModal()">
+      <i class="bi bi-plus-lg"></i> Nouveau projet
+    </button>
+  </div>
+
+  @if (successMsg) {
+    <div class="alert alert-success d-flex align-items-center gap-2">
+      <i class="bi bi-check-circle-fill"></i> {{ successMsg }}
+    </div>
+  }
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      @if (loading) {
+        <div class="text-center py-5"><div class="spinner-border text-success"></div></div>
+      }
+      @if (!loading) {
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Nom du projet</th>
+                <th>Description</th>
+                <th>Budget</th>
+                <th>Statut</th>
+                <th>Équipe</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of projets; track p.id) {
+                <tr>
+                  <td class="text-muted">{{ p.id }}</td>
+                  <td class="fw-semibold">{{ p.nom }}</td>
+                  <td class="text-muted" style="max-width:200px">
+                    <span class="text-truncate d-block">{{ p.description || '—' }}</span>
+                  </td>
+                  <td>{{ p.budget | number:'1.0-0' }} DT</td>
+                  <td><span [class]="'badge ' + badgeClass(p.statut)">{{ p.statut }}</span></td>
+                  <td>
+                    <span class="badge bg-light text-dark border">
+                      <i class="bi bi-people me-1"></i>{{ p.nombreEmployes }}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-success me-1" (click)="openEditModal(p)">
+                      <i class="bi bi-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="delete(p.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="7" class="text-center py-4 text-muted">
+                    <i class="bi bi-folder fs-1 d-block mb-2"></i>
+                    Aucun projet trouvé
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal Projet -->
+<div class="modal fade" id="projetModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title fw-semibold">
+          <i class="bi bi-folder-plus me-2"></i>
+          {{ isEditMode ? 'Modifier le projet' : 'Nouveau projet' }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="form">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Nom du projet *</label>
+            <input type="text" formControlName="nom" class="form-control"
+                   [class.is-invalid]="f['nom'].invalid && f['nom'].touched">
+            <div class="invalid-feedback">Nom requis (min 2 caractères)</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <textarea formControlName="description" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Budget (DT)</label>
+              <input type="number" formControlName="budget" class="form-control" min="0">
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Statut *</label>
+              <select formControlName="statut" class="form-select">
+                @for (s of statuts; track s) {
+                  <option [value]="s">{{ s }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          @if (errorMsg) {
+            <div class="alert alert-danger mt-3 py-2">{{ errorMsg }}</div>
+          }
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-success" (click)="onSubmit()">
+          <i class="bi bi-check-lg me-1"></i>{{ isEditMode ? 'Modifier' : 'Créer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

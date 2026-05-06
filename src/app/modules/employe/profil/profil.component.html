@@ -1,0 +1,40 @@
+<div class="container py-5" style="max-width: 600px">
+  <h3 class="fw-bold mb-4">
+    <i class="bi bi-person-circle me-2 text-primary"></i>Mon Profil
+  </h3>
+
+  @if (user) {
+    <div class="card border-0 shadow-sm">
+      <div class="card-body text-center py-4">
+        <div class="avatar-xl bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+             style="width:80px;height:80px;font-size:2rem">
+          {{ user.prenom[0] }}{{ user.nom[0] }}
+        </div>
+        <h4 class="fw-bold">{{ user.prenom }} {{ user.nom }}</h4>
+        <p class="text-muted">{{ user.email }}</p>
+        <span class="badge bg-primary px-3 py-2">{{ user.role }}</span>
+      </div>
+
+      <div class="card-footer bg-white border-0 px-4 pb-4">
+        <div class="list-group list-group-flush">
+          <div class="list-group-item px-0 d-flex justify-content-between">
+            <span class="text-muted"><i class="bi bi-person me-2"></i>Prénom</span>
+            <span class="fw-semibold">{{ user.prenom }}</span>
+          </div>
+          <div class="list-group-item px-0 d-flex justify-content-between">
+            <span class="text-muted"><i class="bi bi-person me-2"></i>Nom</span>
+            <span class="fw-semibold">{{ user.nom }}</span>
+          </div>
+          <div class="list-group-item px-0 d-flex justify-content-between">
+            <span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span>
+            <span class="fw-semibold">{{ user.email }}</span>
+          </div>
+          <div class="list-group-item px-0 d-flex justify-content-between">
+            <span class="text-muted"><i class="bi bi-shield me-2"></i>Rôle</span>
+            <span class="badge bg-primary">{{ user.role }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

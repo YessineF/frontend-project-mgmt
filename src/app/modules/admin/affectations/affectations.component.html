@@ -1,0 +1,128 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-person-check-fill fs-4 text-info"></i>
+      <h3 class="mb-0 fw-bold">Affectations</h3>
+    </div>
+    <button class="btn btn-info text-white d-flex align-items-center gap-2" (click)="openModal()">
+      <i class="bi bi-plus-lg"></i> Nouvelle affectation
+    </button>
+  </div>
+
+  @if (successMsg) {
+    <div class="alert alert-success d-flex align-items-center gap-2">
+      <i class="bi bi-check-circle-fill"></i> {{ successMsg }}
+    </div>
+  }
+
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      @if (loading) {
+        <div class="text-center py-5"><div class="spinner-border text-info"></div></div>
+      }
+      @if (!loading) {
+        <div class="table-responsive">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Employé</th>
+                <th>Projet</th>
+                <th>Date début</th>
+                <th>Date fin</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (a of affectations; track a.id) {
+                <tr>
+                  <td class="text-muted">{{ a.id }}</td>
+                  <td>
+                    <span class="fw-semibold">{{ a.employePrenom }} {{ a.employeNom }}</span>
+                  </td>
+                  <td>
+                    <span class="badge bg-light text-dark border">{{ a.projetNom }}</span>
+                  </td>
+                  <td>{{ a.dateDebut }}</td>
+                  <td>{{ a.dateFin ?? '—' }}</td>
+                  <td class="text-end">
+                    <button class="btn btn-sm btn-outline-danger" (click)="delete(a.id)">
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+              @empty {
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    <i class="bi bi-person-check fs-1 d-block mb-2"></i>
+                    Aucune affectation
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Modal Affectation -->
+<div class="modal fade" id="affModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title fw-semibold">
+          <i class="bi bi-person-plus me-2"></i>Nouvelle affectation
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="form">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Employé *</label>
+            <select formControlName="employeId" class="form-select"
+                    [class.is-invalid]="f['employeId'].invalid && f['employeId'].touched">
+              <option [ngValue]="null">-- Sélectionner --</option>
+              @for (e of employes; track e.id) {
+                <option [value]="e.id">{{ e.prenom }} {{ e.nom }}</option>
+              }
+            </select>
+            <div class="invalid-feedback">Requis</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Projet *</label>
+            <select formControlName="projetId" class="form-select"
+                    [class.is-invalid]="f['projetId'].invalid && f['projetId'].touched">
+              <option [ngValue]="null">-- Sélectionner --</option>
+              @for (p of projets; track p.id) {
+                <option [value]="p.id">{{ p.nom }}</option>
+              }
+            </select>
+            <div class="invalid-feedback">Requis</div>
+          </div>
+          <div class="row g-3">
+            <div class="col-6">
+              <label class="form-label fw-semibold">Date début *</label>
+              <input type="date" formControlName="dateDebut" class="form-control"
+                     [class.is-invalid]="f['dateDebut'].invalid && f['dateDebut'].touched">
+              <div class="invalid-feedback">Requise</div>
+            </div>
+            <div class="col-6">
+              <label class="form-label fw-semibold">Date fin</label>
+              <input type="date" formControlName="dateFin" class="form-control">
+            </div>
+          </div>
+          @if (errorMsg) { <div class="alert alert-danger mt-3 py-2">{{ errorMsg }}</div> }
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-info text-white" (click)="onSubmit()">
+          <i class="bi bi-check-lg me-1"></i>Affecter
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

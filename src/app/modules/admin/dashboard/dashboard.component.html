@@ -1,0 +1,219 @@
+@if (loading) {
+  <div class="dashboard-loading">
+    <div class="loading-spinner"></div>
+    <span>Chargement du tableau de bord…</span>
+  </div>
+}
+
+@if (!loading) {
+
+  <div class="page-header fade-in">
+    <div>
+      <h1 class="page-title">Tableau de bord</h1>
+      <p class="page-subtitle">Bienvenue — Vue d'ensemble de votre activité</p>
+    </div>
+    <div class="header-date">
+      <i class="bi bi-calendar3"></i>
+      {{ today | date: 'EEEE d MMMM yyyy' : '' : 'fr' }}
+    </div>
+  </div>
+
+  <div class="stats-grid">
+
+    <div class="stat-card fade-in-1" style="--stat-color:#6366f1; --stat-bg:rgba(99,102,241,0.1)">
+      <div class="stat-icon"><i class="bi bi-people-fill"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Employés</div>
+        <div class="stat-value">{{ stats.totalEmployes }}</div>
+        <div class="stat-trend"><i class="bi bi-arrow-up-short"></i> Actifs</div>
+      </div>
+      <div class="stat-chart-mini">
+        <canvas id="miniChart1"></canvas>
+      </div>
+    </div>
+
+    <div class="stat-card fade-in-2" style="--stat-color:#10b981; --stat-bg:rgba(16,185,129,0.1)">
+      <div class="stat-icon"><i class="bi bi-kanban-fill"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Projets total</div>
+        <div class="stat-value">{{ stats.totalProjets }}</div>
+        <div class="stat-trend" style="color:#10b981"><i class="bi bi-arrow-up-short"></i> {{ stats.projetsEnCours }} en cours</div>
+      </div>
+    </div>
+
+    <div class="stat-card fade-in-3" style="--stat-color:#f59e0b; --stat-bg:rgba(245,158,11,0.1)">
+      <div class="stat-icon"><i class="bi bi-tags-fill"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Catégories</div>
+        <div class="stat-value">{{ stats.totalCategories }}</div>
+        <div class="stat-trend" style="color:#f59e0b"><i class="bi bi-dash"></i> Toutes actives</div>
+      </div>
+    </div>
+
+    <div class="stat-card fade-in-4" style="--stat-color:#06b6d4; --stat-bg:rgba(6,182,212,0.1)">
+      <div class="stat-icon"><i class="bi bi-person-check-fill"></i></div>
+      <div class="stat-body">
+        <div class="stat-label">Affectations</div>
+        <div class="stat-value">{{ stats.totalAffectations }}</div>
+        <div class="stat-trend" style="color:#06b6d4"><i class="bi bi-arrow-up-short"></i> Total</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="charts-grid fade-in">
+
+    <div class="chart-card chart-wide">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Répartition des projets</h3>
+          <p class="chart-sub">Projets par statut</p>
+        </div>
+        <div class="chart-legend">
+          <span class="legend-dot" style="background:#3b82f6"></span><span>En cours</span>
+          <span class="legend-dot" style="background:#10b981"></span><span>Terminés</span>
+          <span class="legend-dot" style="background:#f59e0b"></span><span>En attente</span>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="statutChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Budget par statut</h3>
+          <p class="chart-sub">Distribution en %</p>
+        </div>
+      </div>
+      <div class="chart-container-sm">
+        <canvas id="budgetChart"></canvas>
+      </div>
+      <div class="budget-total">
+        <span class="budget-label">Budget total</span>
+        <span class="budget-value">{{ stats.budgetTotal | number:'1.0-0' }} DT</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="charts-grid-2 fade-in">
+
+    <div class="chart-card chart-wide">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Budget des projets récents</h3>
+          <p class="chart-sub">5 derniers projets</p>
+        </div>
+      </div>
+      <div class="chart-container">
+        <canvas id="budgetLineChart"></canvas>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-card-header">
+        <div>
+          <h3 class="chart-title">Taux de progression</h3>
+          <p class="chart-sub">Statuts en pourcentage</p>
+        </div>
+      </div>
+      <div class="progress-stats">
+        <div class="progress-item">
+          <div class="progress-info">
+            <span class="progress-label">Projets terminés</span>
+            <span class="progress-value text-success">{{ getPercent('TERMINE') }}%</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="background:#10b981"
+                 [style.width.%]="getPercent('TERMINE')"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-info">
+            <span class="progress-label">En cours</span>
+            <span class="progress-value text-primary">{{ getPercent('EN_COURS') }}%</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="background:#6366f1"
+                 [style.width.%]="getPercent('EN_COURS')"></div>
+          </div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-info">
+            <span class="progress-label">En attente</span>
+            <span class="progress-value text-warning">{{ getPercent('EN_ATTENTE') }}%</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" style="background:#f59e0b"
+                 [style.width.%]="getPercent('EN_ATTENTE')"></div>
+          </div>
+        </div>
+        <div class="budget-avg">
+          <i class="bi bi-bar-chart-line-fill"></i>
+          <div>
+            <div class="budget-avg-label">Budget moyen / projet</div>
+            <div class="budget-avg-value">{{ stats.budgetMoyen | number:'1.0-0' }} DT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="table-card fade-in">
+    <div class="table-card-header">
+      <div>
+        <h3 class="chart-title">Projets récents</h3>
+        <p class="chart-sub">Les 5 derniers projets créés</p>
+      </div>
+      <a routerLink="/admin/projets" class="btn btn-sm btn-outline-primary">
+        Voir tous <i class="bi bi-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table-pro w-100">
+        <thead>
+          <tr>
+            <th>Projet</th>
+            <th>Budget</th>
+            <th>Statut</th>
+            <th>Équipe</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of projetsRecents; track p.id) {
+            <tr>
+              <td>
+                <div class="project-name">{{ p.nom }}</div>
+                <div class="project-desc">{{ p.description || '—' }}</div>
+              </td>
+              <td>
+                <span class="font-mono">{{ p.budget | number:'1.0-0' }} DT</span>
+              </td>
+              <td>
+                <span [class]="'status-badge ' + getStatutClass(p.statut)">
+                  {{ p.statut | replace:'_':' ' }}
+                </span>
+              </td>
+              <td>
+                <div class="team-count">
+                  <i class="bi bi-people"></i> {{ p.nombreEmployes }}
+                </div>
+              </td>
+              <td class="text-end">
+                <a routerLink="/admin/projets" class="btn btn-icon btn-outline-secondary">
+                  <i class="bi bi-arrow-right"></i>
+                </a>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+}

@@ -1,0 +1,84 @@
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-tags-fill fs-4 text-warning"></i>
+      <h3 class="mb-0 fw-bold">Gestion des Catégories</h3>
+    </div>
+    <button class="btn btn-warning text-dark d-flex align-items-center gap-2" (click)="openCreate()">
+      <i class="bi bi-plus-lg"></i> Nouvelle catégorie
+    </button>
+  </div>
+
+  @if (successMsg) {
+    <div class="alert alert-success d-flex align-items-center gap-2">
+      <i class="bi bi-check-circle-fill"></i> {{ successMsg }}
+    </div>
+  }
+
+  <div class="row g-3">
+    @if (loading) {
+      <div class="col-12 text-center py-5">
+        <div class="spinner-border text-warning"></div>
+      </div>
+    }
+    @for (cat of categories; track cat.id) {
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+              <div class="p-2 bg-warning bg-opacity-10 rounded-2">
+                <i class="bi bi-tag-fill text-warning"></i>
+              </div>
+              <span class="fw-semibold">{{ cat.nom }}</span>
+            </div>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-warning" (click)="openEdit(cat)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="delete(cat.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @empty {
+      @if (!loading) {
+        <div class="col-12 text-center py-5 text-muted">
+          <i class="bi bi-tags fs-1 d-block mb-2"></i>
+          Aucune catégorie
+        </div>
+      }
+    }
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="catModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content border-0 shadow-lg">
+      <div class="modal-header bg-warning">
+        <h5 class="modal-title fw-semibold">
+          {{ isEditMode ? 'Modifier' : 'Nouvelle' }} catégorie
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form [formGroup]="form">
+          <label class="form-label fw-semibold">Nom *</label>
+          <input type="text" formControlName="nom" class="form-control"
+                 [class.is-invalid]="f['nom'].invalid && f['nom'].touched">
+          <div class="invalid-feedback">Nom requis</div>
+          @if (errorMsg) { <div class="alert alert-danger mt-2 py-2">{{ errorMsg }}</div> }
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-warning text-dark" (click)="onSubmit()">
+          {{ isEditMode ? 'Modifier' : 'Créer' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
