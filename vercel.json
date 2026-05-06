@@ -1,7 +1,14 @@
 {
-  "buildCommand": "npm run build -- --configuration production",
+  "buildCommand": "npm install && npx ng build --configuration production",
   "outputDirectory": "dist/frontend-project-mgmt/browser",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://backend-project-mgmt-production.up.railway.app/api/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
